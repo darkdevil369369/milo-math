@@ -29,7 +29,7 @@
   .sub{color:#fff; font-size:1.1rem; opacity:.95; text-align:center; margin-bottom:8px;}
 
   /* MILO mascot */
-  .milo{position:relative; width:150px; height:150px; margin:6px auto; cursor:pointer; transition:transform .2s;}
+  .milo{position:relative; width:150px; height:150px; margin:6px auto; cursor:pointer; transition:transform .2s; flex:0 0 auto;}
   .milo.bounce{animation:bounce 1.6s ease-in-out infinite;}
   .milo.cheer{animation:cheer .5s ease;}
   @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
@@ -39,8 +39,10 @@
   .horn.l{left:46px; transform:rotate(-18deg)} .horn.r{right:46px; transform:rotate(18deg)}
   .eye{position:absolute; top:48px; width:42px; height:42px; background:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center;}
   .eye.l{left:26px} .eye.r{right:26px}
-  .pupil{width:20px; height:20px; background:#222; border-radius:50%; transition:transform .15s;}
-  .mouth{position:absolute; bottom:34px; left:50%; transform:translateX(-50%); width:54px; height:28px; background:#3a1d6e; border-radius:0 0 30px 30px; overflow:hidden;}
+  .pupil{position:relative; width:22px; height:22px; background:#222; border-radius:50%; transition:transform .15s;}
+  .pupil::after{content:''; position:absolute; top:3px; right:4px; width:8px; height:8px; background:#fff; border-radius:50%;}
+  .mouth{position:absolute; bottom:32px; left:50%; transform:translateX(-50%); width:52px; height:26px; background:#3a1d6e; border-radius:0 0 28px 28px; overflow:hidden;}
+  .mouth::after{content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:26px; height:14px; background:#ff5c8d; border-radius:13px 13px 7px 7px;}
   .mouth.think{height:14px; width:30px; border-radius:14px;}
   .cheek{position:absolute; top:88px; width:18px; height:12px; background:var(--pink); border-radius:50%; opacity:.7}
   .cheek.l{left:18px}.cheek.r{right:18px}
@@ -64,11 +66,11 @@
   @keyframes rightpop{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
 
   /* objects (fruits) */
-  .objbox{background:rgba(255,255,255,.25); border-radius:24px; padding:14px; min-height:120px; width:100%; max-width:460px;
-          display:flex; flex-wrap:wrap; gap:6px; align-items:center; justify-content:center; margin-top:6px;}
-  .obj{font-size:2.6rem; animation:dropin .4s ease backwards;}
+  .objbox{background:rgba(255,255,255,.30); border-radius:28px; padding:20px; min-height:230px; width:100%; max-width:520px;
+          display:flex; flex-wrap:wrap; gap:16px; align-items:center; justify-content:center; margin-top:6px;}
+  .obj{font-size:3.6rem; animation:dropin .4s ease backwards; line-height:1;}
   @keyframes dropin{from{transform:translateY(-30px) scale(.5);opacity:0}to{transform:none;opacity:1}}
-  .plus{font-size:2.6rem; color:#fff; font-weight:800; align-self:center;}
+  .plus{font-size:3.2rem; color:#fff; font-weight:800; align-self:center;}
 
   /* top HUD */
   .hud{display:flex; align-items:center; gap:10px; width:100%; max-width:520px; margin-bottom:4px;}
@@ -108,7 +110,8 @@
   #backBtn{left:12px;} #musicBtn{right:12px;}
   .btn.wiggle{animation:wig 2.2s ease-in-out infinite;}
   @keyframes wig{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
-  #s_welcome .milo{margin-top:0;} #s_welcome h1{margin-top:34px;}
+  #s_welcome h1{margin-top:16px; margin-bottom:2px; font-size:1.85rem;}
+  #s_welcome .milo{width:124px; height:124px; margin:2px auto 2px;}
 </style>
 </head>
 <body>
@@ -191,14 +194,18 @@ function save(){ localStorage.setItem(ST_KEY, JSON.stringify(S)); }
 let VOICE=null;
 function pickVoice(){
   const vs=speechSynthesis.getVoices();
-  VOICE = vs.find(v=>/en-US/i.test(v.lang)&&/female|samantha|zira|google us/i.test(v.name)) || vs.find(v=>/en/i.test(v.lang)) || vs[0]||null;
+  // prefer warm, natural voices; avoid robotic default
+  const pref=[/google us english/i,/google uk english female/i,/samantha/i,/aria/i,/jenny/i,/natural/i,/zira/i,/female/i];
+  for(const re of pref){ const v=vs.find(x=>/^en/i.test(x.lang)&&re.test(x.name)); if(v){VOICE=v;return;} }
+  VOICE = vs.find(v=>/^en/i.test(v.lang)) || vs[0] || null;
 }
 if('speechSynthesis' in window){ speechSynthesis.onvoiceschanged=pickVoice; pickVoice(); }
 function say(text){
   if(!('speechSynthesis' in window)) return;
   speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(text);
-  u.rate=0.95; u.pitch=1.3; if(VOICE)u.voice=VOICE;
+  u.rate=0.9; u.pitch=1.08;          // warm + gentle, kid-friendly (was squeaky pitch 1.3)
+  if(VOICE) u.voice=VOICE;
   speechSynthesis.speak(u);
 }
 
@@ -296,15 +303,17 @@ function refreshHUD(){
 }
 
 function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+const ANIMALS=[['🐶','dogs'],['🐱','cats'],['🐰','bunnies'],['🐸','frogs'],['🐥','chicks'],
+  ['🐠','fish'],['🦋','butterflies'],['🐢','turtles'],['🐝','bees'],['🐧','penguins'],
+  ['🦊','foxes'],['🐨','koalas'],['🐮','cows'],['🐷','pigs'],['🦁','lions'],['🐵','monkeys']];
 function makeQ(){
-  const fruits=['🍎','🍌','🍓','🍊','🍇','🍩','🐠','⭐'];
-  const f=fruits[randInt(0,fruits.length-1)];
+  const [f,name]=ANIMALS[randInt(0,ANIMALS.length-1)];
   if(S.age==='little'){               // counting up to 10
     const n=randInt(1,10);
-    return {type:'count', f, n, answer:n, prompt:`How many ${f} do you see?`, objs:Array(n).fill(f)};
-  } else {                            // addition up to 20
+    return {type:'count', f, name, n, answer:n, prompt:`How many ${name} do you see?`, objs:Array(n).fill(f)};
+  } else {                            // addition up to 18
     let a=randInt(1,9), b=randInt(1,9);
-    return {type:'add', f, a, b, answer:a+b, prompt:`What is ${a} plus ${b}?`,
+    return {type:'add', f, name, a, b, answer:a+b, prompt:`What is ${a} plus ${b}?`,
             objs:{a:Array(a).fill(f), b:Array(b).fill(f)}};
   }
 }
