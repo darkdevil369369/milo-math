@@ -1,0 +1,17 @@
+{
+  "name": "Milo's Math Adventure",
+  "short_name": "Milo Math",
+  "description": "Fun gamified math for kids 4-8 — count, add, earn XP, and unlock rewards with Milo!",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#8e7bff",
+  "theme_color": "#7c4dff",
+  "categories": ["education", "kids", "games"],
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

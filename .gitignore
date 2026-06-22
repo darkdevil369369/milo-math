@@ -1,0 +1,8 @@
+node_modules/
+package.json
+package-lock.json
+.pw_install.log
+icon.html
+makeicons.js
+shot.js
+shot_*.png
