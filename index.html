@@ -295,9 +295,9 @@ let cur=null;
 function startGame(){ show('s_game'); refreshHUD(); nextQ(); if(S.music!==false) startMusic(); }
 
 function refreshHUD(){
-  const need=S.level*100;
+  const need=100;                       // 100 xp = 10 questions per level
   document.getElementById('xpbar').style.width=Math.min(100,(S.xp/need)*100)+'%';
-  document.getElementById('xptxt').textContent=S.xp+'/'+need;
+  document.getElementById('xptxt').textContent='❓ '+(S.xp/10)+'/10';   // questions done this level
   document.getElementById('lvlPill').textContent='⭐ Lv '+S.level;
   document.getElementById('streakPill').textContent='🔥 '+S.streak;
 }
@@ -305,7 +305,7 @@ function refreshHUD(){
 function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
 const ANIMALS=[['🐶','dogs'],['🐱','cats'],['🐰','bunnies'],['🐸','frogs'],['🐥','chicks'],
   ['🐠','fish'],['🦋','butterflies'],['🐢','turtles'],['🐝','bees'],['🐧','penguins'],
-  ['🦊','foxes'],['🐨','koalas'],['🐮','cows'],['🐷','pigs'],['🦁','lions'],['🐵','monkeys']];
+  ['🦊','foxes'],['🐨','koalas'],['🐮','cows'],['🦁','lions'],['🐵','monkeys']];
 function makeQ(){
   const [f,name]=ANIMALS[randInt(0,ANIMALS.length-1)];
   if(S.age==='little'){               // counting up to 10
@@ -373,8 +373,8 @@ function bumpStreak(){
 
 function gainXP(n){
   S.xp+=n;
-  let need=S.level*100;
-  while(S.xp>=need){ S.xp-=need; S.level++; need=S.level*100; levelUp(); }
+  let need=100;
+  while(S.xp>=need){ S.xp-=need; S.level++; need=100; levelUp(); }
   save(); refreshHUD();
 }
 
