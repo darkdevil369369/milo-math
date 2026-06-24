@@ -1,4 +1,4 @@
-const CACHE = 'swayam-math-v4';
+const CACHE = 'swayam-math-v5';
 const ASSETS = ['./', './index.html', './manifest.json',
   './icon-192.png', './icon-512.png', './apple-touch-icon-180.png'];
 self.addEventListener('install', e => {
