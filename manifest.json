@@ -1,7 +1,7 @@
 {
-  "name": "Milo's Math Adventure",
-  "short_name": "Milo Math",
-  "description": "Fun gamified math for kids 4-8 — count, add, earn XP, and unlock rewards with Milo!",
+  "name": "Swayam's Math Adventure",
+  "short_name": "Swayam Math",
+  "description": "Fun gamified math for kids 4-8 — count, add, earn XP, and unlock rewards with Swayam!",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
